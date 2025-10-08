@@ -2,7 +2,10 @@
 
 namespace Core;
 
+use Core\Http\Livewire\Admin\Dashboard;
+use Core\Http\Livewire\Admin\Menu;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -23,8 +26,7 @@ class CoreServiceProvider extends ServiceProvider
         }
 
         // Registrace vlastních konfiguračních souborů
-//        $this->mergeConfigFrom(__DIR__ . '/../Config/auth.php', 'auth');
-//        $this->mergeConfigFrom(__DIR__ . '/../Config/permissions.php', 'permissions');
+        //        $this->mergeConfigFrom(__DIR__ . '/../Config/permissions.php', 'permissions');
     }
 
     /**
@@ -44,7 +46,30 @@ class CoreServiceProvider extends ServiceProvider
             __DIR__ . '/../Resources/assets' => public_path('core'),
         ], 'core-assets');
 
+        $this->registerLivewireComponents();
+
+//        Livewire::component('admin.logout-button', \Core\Http\Livewire\Admin\LogoutButton::class);
+
+
         $this->mergeConfigFrom(__DIR__.'/Config/modules.php', 'modules.cms');
 
+    }
+
+
+    protected function registerLivewireComponents()
+    {
+        $componentPath = __DIR__.'/Http/Livewire/Admin';
+
+        if (!is_dir($componentPath)) {
+            return;
+        }
+
+        foreach (glob($componentPath.'/*.php') as $file) {
+            $className = basename($file, '.php');
+            $componentName = 'admin.' . \Illuminate\Support\Str::kebab($className);
+            $fullClass = "Core\\Http\\Livewire\\Admin\\{$className}";
+
+            Livewire::component($componentName, $fullClass);
+        }
     }
 }

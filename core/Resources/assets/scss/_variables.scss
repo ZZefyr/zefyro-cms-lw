@@ -1,0 +1,10 @@
+$primary-color: #3b82f6;
+$secondary-color: #64748b;
+$border-radius: 0.5rem;
+
+// Mixiny
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

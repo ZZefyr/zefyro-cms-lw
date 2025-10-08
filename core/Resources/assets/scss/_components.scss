@@ -1,0 +1,27 @@
+.content-slot {
+    @apply bg-white rounded-lg shadow-md p-6;
+
+    // Custom SCSS nad rámec Tailwindu
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.nav-link {
+    @apply px-4 py-2 text-gray-700 hover:text-blue-600;
+
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s;
+
+    &:hover {
+        border-bottom-color: $primary-color;
+    }
+
+    &.active {
+        @apply text-blue-600 font-semibold;
+        border-bottom-color: $primary-color;
+    }
+}

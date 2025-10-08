@@ -4,10 +4,21 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
     plugins: [
+        tailwindcss(),
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: [
+                'core/Resources/assets/css/tailwind.css',
+                'core/Resources/assets/css/app.scss',
+                'core/Resources/assets/js/app.js'
+            ],
             refresh: true,
         }),
-        tailwindcss(),
     ],
+    // css: {
+    //     preprocessorOptions: {
+    //         scss: {
+    //             additionalData: `@import "./core/Resources/assets/scss/_variables.scss";`
+    //         }
+    //     }
+    // }
 });
