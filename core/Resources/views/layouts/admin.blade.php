@@ -18,8 +18,8 @@
     <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0">
         <div class="h-full flex flex-col">
             <!-- Logo/Brand -->
-            <div class="h-16 flex items-center justify-center border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-700">
-                <h1 class="text-xl font-bold text-white">Admin Panel</h1>
+            <div class="h-16 flex flex-col items-center justify-center border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-700">
+                <h1 class="text-xl font-bold text-white">[ZD] Zefyro Digital</h1> <small class="text-white">Verze: 0.0.1</small>
             </div>
 
             <!-- Menu -->

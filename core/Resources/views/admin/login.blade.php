@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Přihlášení</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    @vite([
+          'core/Resources/assets/css/app.scss',
+      ])
 </head>
-<body class="bg-gray-100">
+<body class="login-bg">
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
+    <div class="max-w-md w-full space-y-8 bg-black/60 backdrop-blur-sm rounded-lg p-8">
         <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Administrace
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-white">
+                [ZD] Zefyro Digital
             </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
+            <p class="mt-2 text-center text-sm text-white">
                 Přihlaste se do administračního rozhraní
             </p>
         </div>

@@ -2,7 +2,8 @@
 
 use Core\Http\Controllers\Admin\DashboardController;
 use Core\Http\Controllers\Admin\LoginController;
-use Core\Http\Livewire\Admin\Dashboard;
+use Core\Livewire\Admin\Dashboard;
+use Core\Livewire\Admin\User;
 use Illuminate\Support\Facades\Route;
 
 
@@ -43,5 +44,6 @@ Route::middleware(['web'])->group(function () {
     Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.login.post');
     Route::middleware(['auth', 'role:super-admin|admin'])->prefix('admin')->group(function () {
         Route::get('/dashboard', Dashboard::class)->name('admin.dashboard');
+        Route::get('/user/add', User::class)->name('user.add');
     });
 });
