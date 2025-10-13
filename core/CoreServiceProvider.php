@@ -4,7 +4,9 @@ namespace Core;
 
 use Core\Livewire\Admin\Grid\UserGrid;
 use Core\Services\MenuService;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 class CoreServiceProvider extends ServiceProvider
@@ -51,6 +53,7 @@ class CoreServiceProvider extends ServiceProvider
         Livewire::component('admin.grid.user-grid', UserGrid::class);
 
         $this->registerLivewireComponents();
+        $this->registerBladeComponents();
 
         $this->mergeConfigFrom(__DIR__.'/Config/modules.php', 'modules.cms');
 
@@ -59,7 +62,7 @@ class CoreServiceProvider extends ServiceProvider
                 'id' => 'stats',
                 'label' => 'Hlavní stránka',
                 'icon' => 'heroicon-o-home',
-                'route' => 'admin.dashboard',
+                'route' => 'admin.pages.dashboard',
                 'order' => 1,
                 'group' => 'main',
             ],
@@ -67,7 +70,7 @@ class CoreServiceProvider extends ServiceProvider
                 'id' => 'user',
                 'label' => 'Uživatelé',
                 'icon' => 'heroicon-o-users',
-                'route' => 'admin.dashboard',
+                'route' => 'admin.pages.dashboard',
                 'order' => 1,
                 'group' => 'main',
             ],
@@ -75,27 +78,55 @@ class CoreServiceProvider extends ServiceProvider
                 'id' => 'settings',
                 'label' => 'Nastavení',
                 'icon' => 'heroicon-o-cog-6-tooth',
-                'route' => 'admin.settings',
+                'route' => 'admin.pages.settings',
                 'order' => 999,
                 'group' => 'settings',
             ],
         ]);
 
     }
-
-
-    protected function registerLivewireComponents()
+    protected function registerBladeComponents()
     {
+        Blade::componentNamespace('Core\\View\\Components\\Form', 'form');
+
+        // Nebo jednoduše alias pro view komponenty
+        Blade::component('core::components.form.input', 'form-input');
+        Blade::component('core::components.form.select', 'form-select');
+        Blade::component('core::components.form.textarea', 'form-textarea');
+        Blade::component('core::components.form.checkbox', 'form-checkbox');
+    }
+
+    protected function registerLivewireComponents(): void {
         $componentPath = __DIR__.'/Livewire/Admin';
 
         if (!is_dir($componentPath)) {
             return;
         }
 
-        foreach (glob($componentPath.'/*.php') as $file) {
-            $className = basename($file, '.php');
-            $componentName = 'admin.' . \Illuminate\Support\Str::kebab($className);
-            $fullClass = "Core\\Livewire\\Admin\\{$className}";
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($componentPath, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+
+        foreach ($files as $file) {
+            if (!$file->isFile() || $file->getExtension() !== 'php') {
+                continue;
+            }
+
+            $relativePath = Str::of($file->getPathname())
+                ->after($componentPath . DIRECTORY_SEPARATOR)
+                ->before('.php')
+                ->replace(DIRECTORY_SEPARATOR, '/');
+
+            $parts = explode('/', $relativePath);
+            $className = array_pop($parts);
+
+            $componentName = 'admin.' . collect([...$parts, $className])
+                    ->map(fn($part) => Str::kebab($part))
+                    ->implode('.');
+
+            $fullClass = 'Core\\Livewire\\Admin\\' .
+                (!empty($parts) ? implode('\\', $parts) . '\\' : '') .
+                $className;
 
             Livewire::component($componentName, $fullClass);
         }

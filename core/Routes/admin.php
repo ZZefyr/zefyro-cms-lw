@@ -3,7 +3,7 @@
 use Core\Http\Controllers\Admin\DashboardController;
 use Core\Http\Controllers\Admin\LoginController;
 use Core\Livewire\Admin\Dashboard;
-use Core\Livewire\Admin\User;
+use Core\Livewire\Admin\Pages\User;
 use Illuminate\Support\Facades\Route;
 
 

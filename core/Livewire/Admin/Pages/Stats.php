@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Livewire\Admin;
+namespace Core\Livewire\Admin\Pages;
 
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -19,6 +19,6 @@ class Stats extends Component
 
     public function render()
     {
-        return view('core::admin.livewire.stats');
+        return view('core::admin.livewire.pages.stats');
     }
 }

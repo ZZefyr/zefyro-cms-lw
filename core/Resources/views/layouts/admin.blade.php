@@ -24,7 +24,7 @@
 
             <!-- Menu -->
             <nav class="flex-1 overflow-y-auto py-4">
-                <livewire:admin.menu />
+                <livewire:admin.components.menu />
             </nav>
         </div>
     </aside>

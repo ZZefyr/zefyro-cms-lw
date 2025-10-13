@@ -1,9 +1,9 @@
 <?php
 
-namespace Core\Livewire\Admin;
+namespace Core\Livewire\Admin\Components;
 
-use Livewire\Component;
 use Core\Services\MenuService;
+use Livewire\Component;
 
 class Menu extends Component
 {
@@ -14,7 +14,7 @@ class Menu extends Component
     }
     public function render(MenuService $menu)
     {
-        return view('core::admin.livewire.menu', [
+        return view('core::admin.livewire.components.menu', [
             'menuItems' => $menu->all(),
             'mainItems' => $menu->getByGroup('main'),
             'eshopItems' => $menu->getByGroup('eshop'),

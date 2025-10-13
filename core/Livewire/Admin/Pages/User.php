@@ -1,11 +1,10 @@
 <?php
 
-namespace Core\Livewire\Admin;
+namespace Core\Livewire\Admin\Pages;
 
 use Core\Services\UserService;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Core\Models\User as UserModel;
 use Spatie\Permission\Models\Role;
 
 class User extends Component
@@ -74,6 +73,6 @@ class User extends Component
 
     public function render()
     {
-        return view('core::admin.livewire.user');
+        return view('core::admin.livewire.pages.user');
     }
 }

@@ -66,22 +66,37 @@
                         </div>
                     @endif
                     <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Jméno</label>
-                            <input type="text" wire:model="name" class="w-full px-3 py-2 border rounded-lg">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Email</label>
-                            <input type="email" wire:model="email" class="w-full px-3 py-2 border rounded-lg">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Heslo</label>
-                            <input type="password" wire:model="password" class="w-full px-3 py-2 border rounded-lg">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-1">Heslo znovu</label>
-                            <input type="password" wire:model="passwordAgain" class="w-full px-3 py-2 border rounded-lg">
-                        </div>
+                        <x-form-input
+                            label="Jméno"
+                            name="name"
+                            wire:model="name"
+                            :error="$errors->first('name')"
+                            required
+                        />
+                        <x-form-input
+                            label="Email"
+                            name="email"
+                            wire:model="email"
+                            :error="$errors->first('email')"
+                            required
+                        />
+                        <x-form-input
+                            label="Heslo"
+                            name="password"
+                            type="password"
+                            wire:model="password"
+                            :error="$errors->first('password')"
+                            required
+                        />
+                        <x-form-input
+                            label="Heslo znovu"
+                            name="passwordAgain"
+                            type="password"
+                            wire:model="passwordAgain"
+                            :error="$errors->first('passwordAgain')"
+                            required
+                        />
+
                         <select wire:model="selectedRole"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
                             <option value="" disabled>-- Vyberte roli --</option>

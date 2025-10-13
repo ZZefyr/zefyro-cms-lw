@@ -16,7 +16,6 @@ class UserGrid extends PowerGridComponent
 
     public string $tableName = 'user-grid-table';
 
-    // ✅ Nové API - bez Header::make()
     public function setUp(): array
     {
         return [

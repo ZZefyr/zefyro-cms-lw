@@ -24,11 +24,12 @@ class Dashboard extends Component
     }
 
     protected $componentMap = [
-        'user' => 'admin.user',
-        'stats' => 'admin.stats',
-        'orders' => 'admin.orders',
-        'products' => 'admin.products',
-        'analytics' => 'admin.analytics',
+        'admin' => 'admin.pages.stats',
+        'user' => 'admin.pages.user',
+        'stats' => 'admin.pages.stats',
+        'orders' => 'admin.pages.orders',
+        'products' => 'admin.pages.products',
+        'settings' => 'admin.pages.settings',
     ];
 
     public function getComponentName()
