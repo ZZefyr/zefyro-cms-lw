@@ -2,7 +2,8 @@
 
 namespace Core;
 
-use Core\Livewire\Admin\Grid\UserGrid;
+use Core\Livewire\Admin\Grids\UserGrid;
+use Core\Services\AdminService;
 use Core\Services\MenuService;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +29,7 @@ class CoreServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(MenuService::class);
+        $this->app->singleton(AdminService::class);
 
         // Registrace vlastních konfiguračních souborů
         //        $this->mergeConfigFrom(__DIR__ . '/../Config/permissions.php', 'permissions');
@@ -36,7 +38,7 @@ class CoreServiceProvider extends ServiceProvider
     /**
      * Bootstrapování jádra
      */
-    public function boot(MenuService $menu): void
+    public function boot(MenuService $menu, AdminService $adminService): void
     {
         // Načti migrationy jádra (např. users, roles, permissions)
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
@@ -84,6 +86,17 @@ class CoreServiceProvider extends ServiceProvider
             ],
         ]);
 
+        $adminService->allowContentMultiple(
+            [
+                'admin' => 'core::admin.pages.stats',
+                'user' => 'core::admin.pages.user',
+                'stats' => 'core::admin.pages.stats',
+                'orders' => 'core::admin.pages.orders',
+                'products' => 'core::admin.pages.products',
+                'settings' => 'core::admin.pages.settings',
+            ]
+        );
+
     }
     protected function registerBladeComponents()
     {
@@ -120,7 +133,7 @@ class CoreServiceProvider extends ServiceProvider
             $parts = explode('/', $relativePath);
             $className = array_pop($parts);
 
-            $componentName = 'admin.' . collect([...$parts, $className])
+            $componentName = 'core::admin.' . collect([...$parts, $className])
                     ->map(fn($part) => Str::kebab($part))
                     ->implode('.');
 

@@ -2,6 +2,8 @@
 
 namespace Core\Livewire\Admin;
 
+use Core\Services\AdminService;
+use Core\Services\MenuService;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -11,6 +13,13 @@ class Dashboard extends Component
 {
     public $selectedContent = 'stats';
     public $pageTitle = 'Dashboard';
+
+    protected AdminService $adminService;
+
+    public function boot(AdminService $adminService): void
+    {
+        $this->adminService = $adminService;
+    }
 
 
     #[Computed]
@@ -23,18 +32,10 @@ class Dashboard extends Component
         ];
     }
 
-    protected $componentMap = [
-        'admin' => 'admin.pages.stats',
-        'user' => 'admin.pages.user',
-        'stats' => 'admin.pages.stats',
-        'orders' => 'admin.pages.orders',
-        'products' => 'admin.pages.products',
-        'settings' => 'admin.pages.settings',
-    ];
-
     public function getComponentName()
     {
-        return $this->componentMap[$this->selectedContent] ?? null;
+        $allowedComponentsMap = $this->adminService->getAllowedContent();
+        return $allowedComponentsMap[$this->selectedContent] ?? null;
     }
 
 

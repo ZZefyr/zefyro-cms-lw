@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Livewire\Admin\Grid;
+namespace Core\Livewire\Admin\Grids;
 
 use Core\Models\User;
 use Illuminate\Database\Eloquent\Builder;

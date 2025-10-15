@@ -1,5 +1,5 @@
 <div>
-    <livewire:admin.grid.user-grid/>
+    <livewire:core::admin.grids.user-grid/>
     {{-- Modal - Alpine sleduje $wire.showCreateForm --}}
     <div x-data="{ open: @entangle('showCreateForm') }"
          x-show="open"
@@ -12,11 +12,11 @@
         <div x-show="open"
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
+             x-transition:enter-end="opacity-50"
              x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100"
+             x-transition:leave-start="opacity-50"
              x-transition:leave-end="opacity-0"
-             class="fixed inset-0 bg-black bg-opacity-50"
+             class="fixed inset-0 bg-black bg-opacity-30"
              @click="open = false">
         </div>
 
@@ -24,9 +24,9 @@
         <div x-show="open"
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:enter-end="opacity-50 translate-y-0 sm:scale-100"
              x-transition:leave="transition ease-in duration-200"
-             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-start="opacity-50 translate-y-0 sm:scale-100"
              x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
              class="relative z-50 w-full max-w-2xl mx-auto my-8 bg-white rounded-lg shadow-xl">
 
