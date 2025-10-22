@@ -80,6 +80,7 @@
                             :error="$errors->first('email')"
                             required
                         />
+                        @if($showPasswordFields)
                         <x-form-input
                             label="Heslo"
                             name="password"
@@ -96,7 +97,8 @@
                             :error="$errors->first('passwordAgain')"
                             required
                         />
-
+                        @endif
+                        <label class="block text-sm font-medium text-gray-700">Role uživatele</label>
                         <select wire:model="selectedRole"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
                             <option value="" disabled>-- Vyberte roli --</option>

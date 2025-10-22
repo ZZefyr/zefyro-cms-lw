@@ -3,6 +3,8 @@
 namespace Core\Livewire\Admin\Pages;
 
 use Core\Services\UserService;
+use Illuminate\Validation\Rule;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Spatie\Permission\Models\Role;
@@ -16,7 +18,11 @@ class User extends Component
     public $password = '';
     public $passwordAgain = '';
     public $selectedRole = '';
-
+    public $showPasswordFields = true;
+    #[Locked]
+    public bool $editMode = false;
+    #[Locked]
+    public ?int $userId = null;
 
     // ✅ Property pro role z DB
     public $roles = [];
@@ -27,7 +33,18 @@ class User extends Component
     #[On('showCreateUserModal')] // ✅ Odchytí event z UserGrid
     public function add(): void {
         $this->showCreateForm = true;
+        $this->editMode = false;
+        $this->showPasswordFields = true; // Při vytváření nového uživatele zobraz pole pro heslo
         $this->loadRoles(); // Refresh rolí při otevření modalu
+
+    }
+
+    #[On('edit-user-modal')] // ✅ Odchytí event z UserGrid
+    public function edit($userId): void {
+        $this->showCreateForm = true;
+        $this->editMode = true;
+        $this->showPasswordFields = false; // Při editaci nemusíme zobrazovat pole pro heslo
+        $this->loadData($userId); // Refresh rolí při otevření modalu
     }
 
     private function loadRoles(): void
@@ -35,39 +52,49 @@ class User extends Component
         $this->roles = Role::all();
     }
 
-
-    public function save(UserService $userService): void
+    private function loadData($userId): void
     {
-        $validated = $this->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
-            'passwordAgain' => 'required|same:password',
-            'selectedRole' => 'required|exists:roles,id', // ✅ Validace role
-        ], [
-            'passwordAgain.same' => 'Hesla se neshodují',
-            'selectedRole.required' => 'Vyberte roli',
-        ]);
+        $user = \Core\Models\User::find($userId);
+        if ($user) {
+            $this->name = $user->name;
+            $this->email = $user->email;
+            // Načti roli uživatele (předpokládáme, že má jednu roli)
+            $this->selectedRole = $user->roles->first()?->id ?? '';
+            $this->userId = $userId;
+        }
+    }
 
-        if($this->passwordAgain != $this->password) {
-            $this->addError('passwordAgain', 'Hesla se neshodují.');
-            return;
+
+    public function save(UserService $userService): void {
+        $rules = [
+            'name' => 'required|string|max:255',
+            'selectedRole' => 'required|exists:roles,id',
+        ];
+
+        if ($this->editMode) {
+            $rules['email'] = [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($this->userId),
+            ];
+        } else {
+            $rules['email'] = 'required|email|unique:users,email';
+            $rules['password'] = 'required|min:8';
+            $rules['passwordAgain'] = 'required|same:password';
         }
 
+        $validated = $this->validate($rules);
 
-        // Vytvoř uživatele
-        $user = $userService->createWithRole($validated, $this->selectedRole);
+        if (!$this->editMode) {
+            $userService->createWithRole($validated, $this->selectedRole);
+            session()->flash('message', 'Uživatel byl vytvořen.');
+        } else {
+            $userService->editWithRole($this->userId, $validated, $this->selectedRole);
+            session()->flash('message', 'Uživatel byl upraven.');
+        }
 
-        // Zavři modal
         $this->showCreateForm = false;
-
-        // Reset formuláře
-        $this->reset(['name', 'email', 'password']);
-
-        // Notification (volitelné)
-        session()->flash('message', 'Uživatel byl úspěšně vytvořen!');
-
-        // Refresh gridu
+        $this->reset(['name', 'email', 'password', 'passwordAgain']);
         $this->dispatch('refreshUserGrid');
     }
 

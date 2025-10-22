@@ -88,7 +88,7 @@ class UserGrid extends PowerGridComponent
         return [
             Button::add('edit')
                 ->slot('Upravit')
-                ->class('btn btn-sm btn-primary')
+                ->class('px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400')
                 ->dispatch('edit-user-modal', ['userId' => $row->id]),
 
             Button::add('delete')

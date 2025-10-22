@@ -66,7 +66,7 @@ class CmsServiceProvider extends ServiceProvider
                         'group' => 'main',
                     ],
                     'cmsPageCategory' => [
-                        'id' => 'cms-page-category',
+                        'id' => 'page-category',
                         'label' => 'Kategorie podstránek',
                         'icon' => 'heroicon-o-folder',
                         'route' => 'admin.pages.cms-page-category',
@@ -80,6 +80,7 @@ class CmsServiceProvider extends ServiceProvider
         $adminService->allowContentMultiple(
             [
                 'page-list' => 'cms::admin.pages.page-list',
+                'page-category' => 'cms::admin.pages.page-category',
             ]
         );
     }
