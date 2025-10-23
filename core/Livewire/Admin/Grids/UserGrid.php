@@ -64,11 +64,14 @@ class UserGrid extends PowerGridComponent
 
             Column::make('Jméno', 'name')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->editOnClick(),
+
 
             Column::make('Email', 'email')
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->editOnClick(),
 
             Column::make('Role', 'roles')
                 ->sortable()
@@ -87,16 +90,35 @@ class UserGrid extends PowerGridComponent
     {
         return [
             Button::add('edit')
-                ->slot('Upravit')
-                ->class('px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400')
+                ->slot('✏️')
+                ->class('px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2')
                 ->dispatch('edit-user-modal', ['userId' => $row->id]),
 
             Button::add('delete')
-                ->slot('Smazat')
-                ->class('btn btn-sm btn-danger')
-                ->dispatch('deleteUser', ['userId' => $row->id])
+                ->slot('🗑️')
+                ->class('px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2')
+                ->dispatch('delete-user', ['userId' => $row->id])
                 ->confirm('Opravdu chcete smazat uživatele ' . $row->name . '?'),
         ];
+    }
+
+    public function onUpdatedEditable(string|int $id, string $field, string $value): void
+    {
+        try {
+            User::query()->find($id)->update([
+                $field => $value,
+            ]);
+
+            $this->dispatch('notify', [
+                'message' => 'Změna byla úspěšně uložena',
+                'type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            $this->dispatch('notify', [
+                'message' => 'Chyba: ' . $e->getMessage(),
+                'type' => 'error'
+            ]);
+        }
     }
 
     public function add() {

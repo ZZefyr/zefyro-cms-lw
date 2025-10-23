@@ -40,8 +40,8 @@ class UserService {
 // Notifikace pro adminy
     }
 
-    public function editWithRole(int $userId, array $validated, mixed $selectedRole) {
-        return DB::transaction(function () use ($userId, $validated, $selectedRole) {
+    public function editWithRole(int $userId, array $validated, int $selectedRoleId) {
+        return DB::transaction(function () use ($userId, $validated, $selectedRoleId) {
             $user = User::find($userId);
             $user->name = $validated['name'];
             $user->email = $validated['email'];
@@ -51,7 +51,7 @@ class UserService {
             $user->save();
 
             // Aktualizuj roli uživatele
-            $user->syncRoles([$selectedRole]);
+            $user->roles()->sync([$selectedRoleId]);
 
             return $user;
         });

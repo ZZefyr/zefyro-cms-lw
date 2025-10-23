@@ -11,7 +11,7 @@ class Stats extends Component
     public function stats()
     {
         return [
-            'users' => 50,
+            'users' => \Core\Models\User::count(),
             'orders' => 20,
             'revenue' => 30,
         ];

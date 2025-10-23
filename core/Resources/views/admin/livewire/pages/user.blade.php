@@ -32,7 +32,11 @@
 
             {{-- Header --}}
             <div class="flex items-center justify-between p-4 border-b">
+                @if($editMode)
+                    <h3 class="text-lg font-semibold">Editovat uživatele</h3>
+                @else
                 <h3 class="text-lg font-semibold">Přidat uživatele</h3>
+                @endif
                 <button @click="open = false"
                         class="text-gray-400 hover:text-gray-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

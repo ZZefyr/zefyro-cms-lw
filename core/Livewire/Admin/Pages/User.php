@@ -44,28 +44,51 @@ class User extends Component
         $this->showCreateForm = true;
         $this->editMode = true;
         $this->showPasswordFields = false; // Při editaci nemusíme zobrazovat pole pro heslo
-        $this->loadData($userId); // Refresh rolí při otevření modalu
+        $this->userId = $userId;
+        $this->loadRoles(); // Refresh rolí při otevření modalu
+        $this->loadData(); // Refresh rolí při otevření modalu
     }
+
+
+    #[On('delete-user')] // ✅ Odchytí event z UserGrid
+    public function delete($userId): void {
+        $currentUser = auth()->user();
+        if(!$this->authorize('delete users', $currentUser)) {
+            session()->flash('error', 'Nemáte oprávnění k odstranění uživatele.');
+            return;
+        }
+        $user = \Core\Models\User::find($userId);
+        if ($user) {
+            $user->delete();
+            session()->flash('message', 'Uživatel byl odstraněn.');
+            $this->dispatch('refreshUserGrid');
+        } else {
+            session()->flash('error', 'Uživatel nebyl nalezen.');
+        }
+    }
+
+
+
 
     private function loadRoles(): void
     {
         $this->roles = Role::all();
     }
 
-    private function loadData($userId): void
+    private function loadData(): void
     {
-        $user = \Core\Models\User::find($userId);
+        $user = \Core\Models\User::find($this->userId);
         if ($user) {
             $this->name = $user->name;
             $this->email = $user->email;
             // Načti roli uživatele (předpokládáme, že má jednu roli)
             $this->selectedRole = $user->roles->first()?->id ?? '';
-            $this->userId = $userId;
         }
     }
 
 
     public function save(UserService $userService): void {
+        $currentUser = auth()->user();
         $rules = [
             'name' => 'required|string|max:255',
             'selectedRole' => 'required|exists:roles,id',
@@ -86,9 +109,17 @@ class User extends Component
         $validated = $this->validate($rules);
 
         if (!$this->editMode) {
+           if(!$this->authorize('create users', $currentUser)) {
+               session()->flash('error', 'Nemáte oprávnění k vytvoření uživatele.');
+               return;
+           }
             $userService->createWithRole($validated, $this->selectedRole);
             session()->flash('message', 'Uživatel byl vytvořen.');
         } else {
+            if(!$this->authorize('edit users', $currentUser)) {
+                session()->flash('error', 'Nemáte oprávnění k editaci uživatele.');
+                return;
+            }
             $userService->editWithRole($this->userId, $validated, $this->selectedRole);
             session()->flash('message', 'Uživatel byl upraven.');
         }

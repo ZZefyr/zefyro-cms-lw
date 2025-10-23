@@ -2,6 +2,7 @@
 
 namespace Core\Livewire\Admin;
 
+use Core\Models\User;
 use Core\Services\AdminService;
 use Core\Services\MenuService;
 use Livewire\Attributes\Computed;
@@ -19,17 +20,6 @@ class Dashboard extends Component
     public function boot(AdminService $adminService): void
     {
         $this->adminService = $adminService;
-    }
-
-
-    #[Computed]
-    public function stats()
-    {
-        return [
-            'users' => 50,
-            'orders' => 20,
-            'revenue' => 30,
-        ];
     }
 
     public function getComponentName()

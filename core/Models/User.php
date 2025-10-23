@@ -21,6 +21,10 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public static function count(): int {
+        return self::query()->count();
+    }
+
     protected static function newFactory()
     {
         return UserFactory::new();
